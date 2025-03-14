@@ -27,9 +27,24 @@ public with sharing class NextStepFuture {
      * Opportunity Next Step field is a standard field
      * Update the corresponding test class AsynchronousTest and test method nextStepFuture_testUpdateAllNextStep to cover test this method
      */
-    //[public | private ] [static] data_type method_name (input parameters) {
-    //  The body of the method
-    //}
+    @future
+    public static void UpdateAllNextStep () {
+      Final String NEXT_STEP = 'Meeting in the future';
+      List<Account> accounts = [SELECT Id, Name,Next_Step__c
+                                FROM Account];
+      List<Opportunity> opportunities = [SELECT Id,AccountId,NextStep
+                                        FROM Opportunity
+                                        WHERE AccountId IN :accounts];
+                                    
+      for(Account acc : accounts) {
+        acc.Next_Step__c = NEXT_STEP;
+      }     
+      for(Opportunity opp : opportunities) {
+        opp.NextStep = NEXT_STEP;
+      }
+      update accounts;
+      update opportunities;
+    }
 
     /*
     * Question 2
@@ -38,14 +53,23 @@ public with sharing class NextStepFuture {
     * Update the corresponding test class AsynchronousTest and test method nextStepFuture_testCreateDealAndUpdateRole to cover test this method
     */
     //Mix DML Error happens when you try to perform DML operations on setup and non-setup objects in a single transaction.
+    
     public static void createDealAndUpdateRole() {
         Opportunity bigDeal = new Opportunity();
         insertBigDeal(bigDeal);
 
-        UserRole[] roles = [SELECT Id, Name FROM UserRole WHERE Id = :UserInfo.getUserRoleId() OR Name = 'CRO' LIMIT 1];
-        updateUserRoleName(roles);
+        List<Id> ids = new List<Id>();
+        UserRole[] roles = [SELECT Id, Name 
+                            FROM UserRole 
+                            WHERE Id = :UserInfo.getUserRoleId() OR Name = 'CRO' LIMIT 1];
+        for(UserRole role : roles)
+        {
+            ids.add(role.Id);
+        }
+        updateUserRoleName(ids);
     }
-
+ 
+    
     // Helper method to insert big deal
     private static void insertBigDeal(Opportunity opp) {
         opp.Amount = 1000000;
@@ -56,10 +80,13 @@ public with sharing class NextStepFuture {
         insert opp;
     }
 
-
+    @future
     // Helper method to update role name
-    private static void updateUserRoleName(UserRole[] roles){
-        UserRole role;
+    private static void updateUserRoleName(List<Id> ids){
+        List<UserRole> roles = [SELECT Id,Name 
+                               FROM UserRole
+                               WHERE Id in :ids];    
+        UserRole role;                       
         if (roles.isEmpty()) {
             role = new UserRole();
             role.portalType = 'None'; 
