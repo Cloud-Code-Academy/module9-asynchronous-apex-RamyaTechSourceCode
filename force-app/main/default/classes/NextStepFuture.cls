@@ -28,8 +28,8 @@ public with sharing class NextStepFuture {
      * Update the corresponding test class AsynchronousTest and test method nextStepFuture_testUpdateAllNextStep to cover test this method
      */
     @future
-    public static void UpdateAllNextStep () {
-      Final String NEXT_STEP = 'Meeting in the future';
+    public static void updateAllNextStep () {
+      final String NEXT_STEP = 'Meeting in the future';
       List<Account> accounts = [SELECT Id, Name,Next_Step__c
                                 FROM Account];
       List<Opportunity> opportunities = [SELECT Id,AccountId,NextStep
