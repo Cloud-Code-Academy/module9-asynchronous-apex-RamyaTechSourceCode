@@ -29,7 +29,10 @@ public with sharing class NextStepFuture {
      */
     @future
     public static void updateAllNextStep () {
-      final String NEXT_STEP = 'Meeting in the future';
+      //final String NEXT_STEP = 'Meeting in the future.'; 
+      //throws error in git
+     
+      String nextStep = 'Meeting in the future.';
       List<Account> accounts = [SELECT Id, Name,Next_Step__c
                                 FROM Account];
       List<Opportunity> opportunities = [SELECT Id,AccountId,NextStep
@@ -37,10 +40,10 @@ public with sharing class NextStepFuture {
                                         WHERE AccountId IN :accounts];
                                     
       for(Account acc : accounts) {
-        acc.Next_Step__c = NEXT_STEP;
+        acc.Next_Step__c = nextStep;
       }     
       for(Opportunity opp : opportunities) {
-        opp.NextStep = NEXT_STEP;
+        opp.NextStep = nextStep;
       }
       update accounts;
       update opportunities;
