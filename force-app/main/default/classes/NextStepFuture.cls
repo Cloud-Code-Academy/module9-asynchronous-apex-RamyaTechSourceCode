@@ -32,7 +32,7 @@ public with sharing class NextStepFuture {
       //final String NEXT_STEP = 'Meeting in the future.'; 
       //throws error in git
      
-      String nextStep = 'Meeting in the future.';
+      String nextStep = 'Meeting in the future';
       List<Account> accounts = [SELECT Id, Name,Next_Step__c
                                 FROM Account];
       List<Opportunity> opportunities = [SELECT Id,AccountId,NextStep
